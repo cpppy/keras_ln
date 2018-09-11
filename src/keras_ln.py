@@ -213,7 +213,9 @@ if __name__ == "__main__":
 
     # early stopping in train
     early_stopping = keras.callbacks.EarlyStopping(monitor='val_loss', patience=8)
-    model.fit(x_train, y_train, validation_split=0.2, callbacks=[early_stopping])
+    model.fit(x_train, y_train,
+              validation_split=0.2,
+              callbacks=[early_stopping])
     # validation_split: decide how much to train and test
 
     hist = model.fit(x_train, y_train, epochs=10, batch_size=32)
