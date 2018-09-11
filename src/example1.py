@@ -2,6 +2,7 @@ import keras
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Activation
 from keras.optimizers import SGD
+import matplotlib.pyplot as plt
 
 if __name__ == "__main__":
     # 生成虚拟数据
@@ -26,16 +27,27 @@ if __name__ == "__main__":
     sgd = SGD(lr=0.01, decay=1e-6, momentum=0.9, nesterov=True)
     model.compile(loss='categorical_crossentropy',
                   optimizer=sgd,
-                  metrics=['accuracy'])
+                  metrics=['mae', 'acc'])
 
-    model.fit(x_train, y_train,
-              epochs=20,
-              batch_size=128)
+    fit_history = model.fit(x_train, y_train,validation_split=0.1,
+                            shuffle=True,
+                            callbacks=[],
+                            epochs=100,
+                            batch_size=32)
     score = model.evaluate(x_test, y_test, batch_size=128)
     print("x_test shape: ", x_test.shape)
     print("score: ", score)
     evaluate_loss = score[0]
     evaluate_acc = score[1]
 
-
-    
+    print(fit_history.history.keys())
+    # summarize history for accuracy
+    # plt.plot(fit_history.history['acc'])
+    # plt.plot(fit_history.history['val_acc'])
+    plt.plot(fit_history.history['loss'])
+    plt.plot(fit_history.history['val_loss'])
+    plt.title('model loss')
+    plt.ylabel('loss')
+    plt.xlabel('epoch')
+    plt.legend(['loss', 'val_loss'], loc='upper left')
+    plt.show()
